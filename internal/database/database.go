@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Jason-Omondi/ecom/internal/config"
+	"github.com/Jason-Omondi/ecomgo/internal/config"
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"

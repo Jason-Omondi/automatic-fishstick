@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/Jason-Omondi/ecom/internal/models"
+	"github.com/Jason-Omondi/ecomgo/internal/models"
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 )
@@ -33,8 +33,16 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 }
 
 // handleRegister handles POST /api/v1/register
-// Creates a new user account and returns auth token on success
-// Returns: 201 Created with user data and token, or 400/500 on error
+// @Summary Register new user
+// @Description Creates a new user account and returns auth token
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param request body models.RegisterRequest true "Registration request"
+// @Success 201 {object} models.AuthResponse
+// @Failure 400 {string} string "Invalid request or user already exists"
+// @Failure 500 {string} string "Internal server error"
+// @Router /register [post]
 func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 	h.log.Info("Register endpoint called")
 
@@ -61,8 +69,17 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 }
 
 // handleLogin handles POST /api/v1/login
-// Authenticates user and returns auth token on success
-// Returns: 200 OK with user data and token, or 401/500 on error
+// @Summary Login user
+// @Description Authenticates user and returns auth token
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param request body models.LoginRequest true "Login request"
+// @Success 200 {object} models.AuthResponse
+// @Failure 400 {string} string "Invalid request"
+// @Failure 401 {string} string "Invalid credentials"
+// @Failure 500 {string} string "Internal server error"
+// @Router /login [post]
 func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 	h.log.Info("Login endpoint called")
 
@@ -89,8 +106,16 @@ func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 // handleGetUser handles GET /api/v1/users/{id}
-// Retrieves user data by ID
-// Returns: 200 OK with user data, or 404/500 on error
+// @Summary Get user by ID
+// @Description Retrieves user data by ID
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param id path string true "User ID"
+// @Success 200 {object} models.User
+// @Failure 404 {string} string "User not found"
+// @Failure 500 {string} string "Internal server error"
+// @Router /users/{id} [get]
 func (h *Handler) handleGetUser(w http.ResponseWriter, r *http.Request) {
 	// Extract user ID from URL path
 	vars := mux.Vars(r)

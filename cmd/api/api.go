@@ -3,10 +3,10 @@ package api
 import (
 	"net/http"
 
-	"github.com/Jason-Omondi/ecom/cmd/service/user"
-	"github.com/Jason-Omondi/ecom/internal/config"
-	"github.com/Jason-Omondi/ecom/internal/migrations"
-	"github.com/Jason-Omondi/ecom/internal/repository"
+	"github.com/Jason-Omondi/ecomgo/cmd/service/user"
+	"github.com/Jason-Omondi/ecomgo/internal/config"
+	"github.com/Jason-Omondi/ecomgo/internal/migrations"
+	"github.com/Jason-Omondi/ecomgo/internal/repository"
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
 	"go.uber.org/zap"

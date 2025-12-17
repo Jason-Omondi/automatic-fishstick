@@ -6,9 +6,9 @@ import (
 	"encoding/hex"
 	"errors"
 
-	"github.com/Jason-Omondi/ecom/internal/config"
-	"github.com/Jason-Omondi/ecom/internal/models"
-	"github.com/Jason-Omondi/ecom/internal/repository"
+	"github.com/Jason-Omondi/ecomgo/internal/config"
+	"github.com/Jason-Omondi/ecomgo/internal/models"
+	"github.com/Jason-Omondi/ecomgo/internal/repository"
 	"go.uber.org/zap"
 )
 

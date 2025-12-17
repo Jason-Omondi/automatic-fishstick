@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/Jason-Omondi/ecom/internal/models"
+	"github.com/Jason-Omondi/ecomgo/internal/models"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )

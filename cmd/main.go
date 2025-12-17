@@ -3,14 +3,32 @@ package main
 import (
 	"log"
 
-	"github.com/Jason-Omondi/ecom/cmd/api"
-	"github.com/Jason-Omondi/ecom/internal/config"
-	"github.com/Jason-Omondi/ecom/internal/database"
-	"github.com/Jason-Omondi/ecom/internal/logger"
-	_ "github.com/go-sql-driver/mysql"
-	_ "github.com/lib/pq"
+	"github.com/Jason-Omondi/ecomgo/cmd/api"
+	"github.com/Jason-Omondi/ecomgo/internal/config"
+	"github.com/Jason-Omondi/ecomgo/internal/database"
+	"github.com/Jason-Omondi/ecomgo/internal/logger"
 	"go.uber.org/zap"
 )
+
+// @title EcomGo API
+// @version 1.0
+// @description E-Commerce API with user authentication
+// @termsOfService http://swagger.io/terms/
+//
+// @contact.name API Support
+// @contact.url http://www.example.com/support
+//
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+//
+// @host localhost:8085
+// @BasePath /api/v1
+// @schemes http https
+//
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Type "Bearer" followed by a space and JWT token.
 
 func main() {
 	// Initialize logger
