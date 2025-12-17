@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  # Go Application
+  app:
+    build: .
+    container_name: ecomgo_app
+    ports:
+      - "8085:8085"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: password
+      DB_NAME: ecomgo
+      DB_PORT: 3306
+      DB_TYPE: mysql
+      SERVER_PORT: 8085
+    networks:
+      - ecomgo_network
+
+  # MySQL Database (default)
+  mysql:
+    image: mysql:8.0
+    container_name: ecomgo_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: ecomgo
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-ppassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ecomgo_network
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+
+  # PostgreSQL Database (uncomment to use instead of MySQL)
+  # postgres:
+  #   image: postgres:16-alpine
+  #   container_name: ecomgo_postgres
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: password
+  #     POSTGRES_DB: ecomgo
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U postgres"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - ecomgo_network
+
+  # Database GUI Management (works with MySQL and PostgreSQL)
+  adminer:
+    image: adminer:latest
+    container_name: ecomgo_adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      # postgres:
+      #   condition: service_healthy
+    networks:
+      - ecomgo_network
+    # Access at http://localhost:8080
+    # System: MySQL
+    # Server: mysql (use container name from same network)
+    # Username: root
+    # Password: password
+    # Database: ecomgo
+
+volumes:
+  mysql_data:
+  # postgres_data:
+
+networks:
+  ecomgo_network:
+    driver: bridge
