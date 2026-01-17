@@ -2,13 +2,13 @@ package api
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/Jason-Omondi/ecomgo/cmd/service/user"
 	"github.com/Jason-Omondi/ecomgo/internal/config"
 	"github.com/Jason-Omondi/ecomgo/internal/migrations"
 	"github.com/Jason-Omondi/ecomgo/internal/repository"
 	"github.com/gorilla/mux"
-	httpSwagger "github.com/swaggo/http-swagger"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -29,9 +29,61 @@ func NewAPIServer(port string, db *gorm.DB, cfg *config.Config, log *zap.Logger)
 		w.Write([]byte("OK"))
 	})
 
-	// Add Swagger documentation endpoint
-	// Serves interactive API docs at /swagger/index.html
-	router.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
+	// Serve swagger.json file
+	router.HandleFunc("/swagger/doc.json", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	// Read swagger.json from docs directory
+	content, err := os.ReadFile("docs/swagger.json")
+	if err != nil {
+		// Try from different path if running from subdirectory
+		content, err = os.ReadFile("../../../docs/swagger.json")
+		if err != nil {
+			log.Error("Failed to read swagger.json", zap.Error(err))
+			http.Error(w, `{"error":"Failed to load API definition"}`, http.StatusInternalServerError)
+			return
+		}
+	}
+	w.Write(content)
+	})
+
+	router.HandleFunc("/swagger/index.html", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		html := `
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EcomGo API</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://unpkg.com/swagger-ui-dist@3/swagger-ui.css" rel="stylesheet">
+</head>
+<body>
+    <div id="swagger-ui"></div>
+    <script src="https://unpkg.com/swagger-ui-dist@3/swagger-ui.js"></script>
+    <script>
+        window.onload = function() {
+            window.ui = SwaggerUIBundle({
+                url: "/swagger/doc.json",
+                dom_id: '#swagger-ui',
+                deepLinking: true,
+                presets: [
+                    SwaggerUIBundle.presets.apis,
+                    SwaggerUIBundle.SwaggerUIStandalonePreset
+                ],
+                plugins: [
+                    SwaggerUIBundle.plugins.DownloadUrl
+                ],
+                layout: "BaseLayout"
+            })
+        }
+    </script>
+</body>
+</html>
+		`
+		w.Write([]byte(html))
+	})
 
 	return &APIServer{
 		port:   port,

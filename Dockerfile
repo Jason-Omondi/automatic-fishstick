@@ -13,6 +13,7 @@ WORKDIR /root/
 
 COPY --from=builder /app/main .
 COPY .env .
+COPY docs/ ./docs/
 
 EXPOSE 8085
 CMD ["./main"]

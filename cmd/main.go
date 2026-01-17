@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/Jason-Omondi/ecomgo/cmd/api"
+	_ "github.com/Jason-Omondi/ecomgo/docs"
 	"github.com/Jason-Omondi/ecomgo/internal/config"
 	"github.com/Jason-Omondi/ecomgo/internal/database"
 	"github.com/Jason-Omondi/ecomgo/internal/logger"
